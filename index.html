@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Federico Bartsch — PhD Researcher in AI & Computer Vision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --ink: #1a1814;
+      --rust: #b84c2b;
+      --rust-light: #d4603a;
+      --warm-gray: #8a8278;
+      --border: #d8d0c4;
+      --paper: #fffdf9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.5;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* ── Header ── */
+    header {
+      padding: 4rem 0 2rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.8s ease forwards 0.1s;
+    }
+
+    .header-inner {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      gap: 2rem;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.8rem;
+    }
+
+    h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.8rem, 6vw, 4.2rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--rust);
+    }
+
+    .tagline {
+      margin-top: 1rem;
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--warm-gray);
+      line-height: 1.6;
+      max-width: 480px;
+    }
+
+    /* ── Nav Links ── */
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      padding-top: 0.4rem;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .nav-links a:hover { color: var(--rust); }
+
+    .nav-links a .arrow {
+      font-size: 0.65rem;
+      transition: transform 0.2s;
+    }
+
+    .nav-links a:hover .arrow { transform: translateX(3px); }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin: 2.5rem 0;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards 0.5s;
+    }
+
+    /* ── Section ── */
+    section {
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    section.visible {
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--warm-gray);
+      margin-bottom: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── About ── */
+    .about-text {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      font-weight: 300;
+      color: var(--ink);
+      max-width: 640px;
+    }
+
+    .about-text strong {
+      font-weight: 500;
+    }
+
+    /* ── Research card ── */
+    .paper-card {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      padding: 1.5rem 1.8rem;
+      margin-bottom: 1rem;
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .paper-card:hover {
+      border-color: var(--rust);
+      box-shadow: 4px 4px 0 var(--rust);
+    }
+
+    .paper-venue {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rust);
+      margin-bottom: 0.5rem;
+    }
+
+    .paper-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      line-height: 1.35;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+
+    .paper-authors {
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .paper-authors strong {
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .paper-desc {
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+      color: var(--warm-gray);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ── Experience ── */
+    .exp-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0 2rem;
+      padding: 1.4rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .exp-item:last-child { border-bottom: none; }
+
+    .exp-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--warm-gray);
+      line-height: 1.6;
+      padding-top: 0.15rem;
+    }
+
+    .exp-company {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.05rem;
+      font-weight: 400;
+      margin-bottom: 0.2rem;
+    }
+
+    .exp-role {
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+      font-weight: 300;
+      margin-bottom: 0.6rem;
+    }
+
+    .exp-points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .exp-points li {
+      font-size: 0.85rem;
+      color: var(--warm-gray);
+      font-weight: 300;
+      line-height: 1.5;
+      padding-left: 1rem;
+      position: relative;
+    }
+
+    .exp-points li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--rust);
+      font-size: 0.7rem;
+    }
+
+    /* ── Education ── */
+    .edu-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0 2rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .edu-item:last-child { border-bottom: none; }
+
+    .edu-degree {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1rem;
+      font-weight: 400;
+    }
+
+    .edu-school {
+      font-size: 0.82rem;
+      color: var(--warm-gray);
+      font-weight: 300;
+      margin-top: 0.15rem;
+    }
+
+    /* ── Contact / Links ── */
+    .links-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .link-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 0.55rem 1rem;
+      background: var(--paper);
+      transition: all 0.2s;
+    }
+
+    .link-pill:hover {
+      background: var(--rust);
+      border-color: var(--rust);
+      color: var(--cream);
+    }
+
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      animation: fadeIn 0.6s ease forwards 1.2s;
+    }
+
+    .footer-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 0.9rem;
+      color: var(--warm-gray);
+    }
+
+    .footer-note {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--border);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .header-inner { grid-template-columns: 1fr; }
+      .nav-links { flex-direction: row; flex-wrap: wrap; align-items: flex-start; }
+      .exp-item, .edu-item { grid-template-columns: 1fr; gap: 0.3rem; }
+      .exp-meta { margin-bottom: 0.3rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-inner">
+        <div>
+          <p class="eyebrow">PhD Researcher · AI & Computer Vision</p>
+          <h1>Federico<br><em>Bartsch</em></h1>
+          <p class="tagline">Working at the intersection of vision-language models, semantic segmentation, and AI safety. MHUG Group, University of Trento.</p>
+        </div>
+        <nav class="nav-links">
+          <a href="mailto:federico.bartsch@unitn.it">Email <span class="arrow">→</span></a>
+          <a href="https://scholar.google.com" target="_blank">Scholar <span class="arrow">→</span></a>
+          <a href="https://github.com" target="_blank">GitHub <span class="arrow">→</span></a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <section id="about">
+      <p class="section-label">About</p>
+      <p class="about-text">
+        I am a PhD student in <strong>Artificial Intelligence</strong> at the University of Trento, 
+        supervised by <strong>Elisa Ricci</strong> and <strong>Massimiliano Mancini</strong> in the 
+        Multimedia and Human Understanding Group (MHUG). My research focuses on bias mitigation in vision-language 
+        models, test-time adaptation, and the safety evaluation of multimodal large language models.
+        <br><br>
+        Previously, I was a Computer Vision Research Intern at <strong>Toyota Motor Europe</strong> in Brussels,
+        where I developed Early Exit methods for semantic segmentation, and a Software Engineering Intern
+        at <strong>Hewlett Packard Enterprise</strong> working on anomaly detection in 5G network data.
+      </p>
+    </section>
+
+    <section id="research">
+      <p class="section-label">Research</p>
+
+      <div class="paper-card">
+        <p class="paper-venue">CVPR 2026 · Findings</p>
+        <p class="paper-title">SEM: Sparse Embedding Modulation for Post-Hoc Debiasing</p>
+        <p class="paper-authors">Quentin Guimard*, <strong>Federico Bartsch*</strong>, Simone Caldarella, Rahaf Aljundi, Elisa Ricci, Massimiliano Mancini &nbsp;·&nbsp; *Equal contribution</p>
+        <p class="paper-desc">A zero-shot framework using Sparse Autoencoders (SAEs) to decompose CLIP text embeddings into interpretable, disentangled features. A modulation mechanism isolates and neutralizes bias-relevant neurons while preserving query-relevant semantic fidelity in the latent space.</p>
+      </div>
+
+      <div class="paper-card">
+        <p class="paper-venue">Ongoing</p>
+        <p class="paper-title">Safety Benchmarking for Video Multimodal LLMs</p>
+        <p class="paper-authors"><strong>Federico Bartsch</strong> et al.</p>
+        <p class="paper-desc">Constructing a benchmark leveraging video generation to evaluate safety and robustness of Multimodal LLMs, with a focus on subtle safety violations requiring complex visual-temporal reasoning.</p>
+      </div>
+    </section>
+
+    <section id="experience">
+      <p class="section-label">Experience</p>
+
+      <div class="exp-item">
+        <div class="exp-meta">09/2024 – 03/2025<br>Brussels, Belgium</div>
+        <div>
+          <p class="exp-company">Toyota Motor Europe</p>
+          <p class="exp-role">Computer Vision Researcher Intern · Supervisor: Wim Abbeloos</p>
+          <ul class="exp-points">
+            <li>Researched high-resolution image utilization for semantic segmentation and object detection.</li>
+            <li>Developed Early Exit methods for segmentation, reducing inference time by 40% with under 1% accuracy loss.</li>
+            <li>Gained hands-on experience in scientific paper writing.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-meta">10/2022 – 04/2023<br>Rome, Italy</div>
+        <div>
+          <p class="exp-company">Hewlett Packard Enterprise</p>
+          <p class="exp-role">Software Engineer Intern (Machine Learning)</p>
+          <ul class="exp-points">
+            <li>Built an anomaly detection system for multivariate time series data from 5G antennas.</li>
+            <li>Developed an in-house data quality assessment tool, achieving a 200% reduction in data retrieval time.</li>
+            <li>Applied PCA and clustering to categorize antenna behavior; improved classification F1 score by 10%.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="education">
+      <p class="section-label">Education</p>
+
+      <div class="edu-item">
+        <div class="exp-meta">2025 – current</div>
+        <div>
+          <p class="edu-degree">PhD in Artificial Intelligence</p>
+          <p class="edu-school">University of Trento · MHUG Group</p>
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="exp-meta">2023 – 2025</div>
+        <div>
+          <p class="edu-degree">MSc in Artificial Intelligence Systems</p>
+          <p class="edu-school">University of Trento</p>
+        </div>
+      </div>
+
+      <div class="edu-item">
+        <div class="exp-meta">2019 – 2023</div>
+        <div>
+          <p class="edu-degree">BSc in Computer Science</p>
+          <p class="edu-school">University of Milan Bicocca</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <p class="section-label">Contact & Links</p>
+      <div class="links-row">
+        <a class="link-pill" href="mailto:federico.bartsch@unitn.it">
+          ✉ Email
+        </a>
+        <a class="link-pill" href="https://scholar.google.com/citations?user=YOURID" target="_blank">
+          ◎ Google Scholar
+        </a>
+        <a class="link-pill" href="https://github.com/federicobartsch" target="_blank">
+          ⌥ GitHub
+        </a>
+        <a class="link-pill" href="https://linkedin.com/in/federicobartsch" target="_blank">
+          ⊕ LinkedIn
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span class="footer-name">Federico Bartsch</span>
+      <span class="footer-note">Trento, Italy · 2025</span>
+    </footer>
+  </div>
+
+  <script>
+    // Intersection Observer for staggered section reveals
+    const sections = document.querySelectorAll('section');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    sections.forEach((s, i) => {
+      s.style.animationDelay = `${0.3 + i * 0.12}s`;
+      observer.observe(s);
+    });
+  </script>
+</body>
+</html>
